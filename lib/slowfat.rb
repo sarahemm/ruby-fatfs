@@ -1,0 +1,6 @@
+require 'slowfat/filesystem.rb'
+require 'slowfat/bootsect.rb'
+require 'slowfat/file_alloc_table.rb'
+require 'slowfat/dir.rb'
+require 'slowfat/data.rb'
+require 'slowfat/fat_file.rb'
