@@ -1,7 +1,15 @@
 module SlowFat
+  ##
+  # Directory represents one directory on a FAT filesystem.
   class Directory
+    # @return [Array<Dentry>] an array of directory entries within this directory
     attr_reader :entries
 
+    ##
+    # Initialize a new Directory object (normally only called from Filesystem.dir)
+    # @param backing [IO] the storage containing the filesystem (e.g. open file)
+    # @param base [Integer] the location of the beginning of this directory structure within the backing device
+    # @param max_entries [Integer] the maximum number of entries that can be in this directory
     def initialize(backing:, base:, max_entries:)
       @backing = backing
       @entries = []
@@ -14,6 +22,10 @@ module SlowFat
       end
     end
 
+    ##
+    # Return a directory entry for a specific file within this directory
+    # @param filename [String] the name of the file to access
+    # @return [Dentry] the directory entry object matching the requested file
     def file_entry(filename)
       @entries.each do |dentry|
         full_dentry_filename = dentry.extension.length > 0 ? "#{dentry.filename}.#{dentry.extension}".downcase : dentry.filename.downcase
@@ -23,6 +35,10 @@ module SlowFat
       nil
     end
 
+    ##
+    # Return a directory entry for a specific subdirectory within this directory
+    # @param filename [String] the name of the directory to access
+    # @return [Dentry] the directory entry object matching the requested subdirectory
     def dir_entry(filename)
       @entries.each do |dentry|
         full_dentry_filename = dentry.extension.length > 0 ? "#{dentry.filename}.#{dentry.extension}".downcase : dentry.filename.downcase
@@ -32,8 +48,10 @@ module SlowFat
       nil
     end
 
+    ##
+    # Convert a Directory into a vaguely DOS-style file listing
+    # @return [String] the contents of this directory, formatted as a human-readable listing
     def to_s
-      # convert a Directory into a vaguely DOS-style file listing
       buf = ""
       @entries.each do |dentry|
         if(dentry.type == :file) then
@@ -46,9 +64,23 @@ module SlowFat
       buf
     end
 
+    ##
+    # Dentry represents one entry inside a Directory.
     class Dentry
-      attr_reader :filename, :extension, :start_cluster, :size, :type
+       # @return [String] the name of the file or other directory entry
+      attr_reader :filename
+      # @return [String] the file extension
+      attr_reader :extension
+      # @return [Integer] the starting cluster of this file in the backing
+      attr_reader :start_cluster
+      # @return [Integer] the size of the file in bytes
+      attr_reader :size
+      # @return [Symbol] the type of item this dentry describes
+      attr_reader :type
 
+      ##
+      # Initialize a new directory entry (normally only called from Directory)
+      # @param dir_data [String] the data making up this dentry in the backing
       def initialize(dir_data)
         case dir_data[0].ord
           when 0x00
@@ -75,30 +107,44 @@ module SlowFat
         @type = :directory if attrib_bits & 0x10 > 0
       end
 
+      ##
+      # Returns true if this dentry has the read only attribute set
       def read_only?
-        @hidden
+        @read_only
       end
 
+      ##
+      # Returns true if this dentry has the hidden attribute set
       def hidden?
         @hidden
       end
 
+      ##
+      # Returns true if this dentry has the system attribute set
       def system?
         @system
       end
       
+      ##
+      # Returns true if this dentry has the archive attribute set
       def archive?
         @archive
       end
 
+      ##
+      # Returns true if this dentry has the device attribute set
       def device?
         @device
       end
 
+      ##
+      # Returns true if this dentry is a file that has been deleted
       def deleted?
         @deleted
       end
 
+      ##
+      # Returns true if this dentry is a dot directory (. or ..)
       def dotdir?
         @dotdir
       end
