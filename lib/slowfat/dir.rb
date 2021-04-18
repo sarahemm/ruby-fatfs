@@ -32,6 +32,20 @@ module SlowFat
       nil
     end
 
+    def to_s
+      # convert a Directory into a vaguely DOS-style file listing
+      buf = ""
+      @entries.each do |dentry|
+        if(dentry.type == :file) then
+          buf += sprintf("%-8s %-3s   %d\n", dentry.filename, dentry.extension, dentry.size)
+        elsif(dentry.type == :directory)
+          buf += sprintf("%-8s %-3s   <DIR>\n", dentry.filename, dentry.extension)
+        end
+      end
+
+      buf
+    end
+
     class Dentry
       attr_reader :filename, :extension, :start_cluster, :size, :type
 
@@ -87,16 +101,6 @@ module SlowFat
 
       def dotdir?
         @dotdir
-      end
-    end
-
-    def dump
-      @entries.each do |dentry|
-        if(dentry.type == :file) then
-          printf("%-8s %-3s   %d\n", dentry.filename, dentry.extension, dentry.size)
-        elsif(dentry.type == :directory)
-          printf("%-8s %-3s   <DIR>\n", dentry.filename, dentry.extension)
-        end
       end
     end
   end
