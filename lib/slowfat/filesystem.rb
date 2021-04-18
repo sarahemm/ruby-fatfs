@@ -2,10 +2,9 @@ module SlowFat
   class Filesystem
     attr_reader :backing, :rootdir_base, :rootdir, :data_base, :fats, :cluster_size
 
-    def initialize(backing:)
-      # TODO: this needs to be more flexible
-      @base = 0x0000
+    def initialize(backing:, base: 0x0000)
       @backing = backing
+      @base = base
 
       fat_base = @base + 512
       fat_size = bios_parameter_block.bytes_per_logsect * bios_parameter_block.logsects_per_fat
