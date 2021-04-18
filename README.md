@@ -20,7 +20,7 @@ Ruby class/gem to access FAT filesystems (currently only FAT16) over slow links 
     img = File.open("test_fat16.img", 'r')
     fs = Fat::Filesystem.new(backing: img, base: 0x7E00)
     print fs.dir("WINDOWS").to_s
-    puts fs.file("WINDOWS/SETUP.TXT").contents
+    print fs.file("WINDOWS/SETUP.TXT").contents
 
 
 ## Full Documentation
