@@ -24,4 +24,4 @@ Ruby class/gem to access FAT filesystems (currently only FAT16) over slow links 
 
 
 ## Full Documentation
-YARD docs included, also available on [RubyDoc.info](https://www.rubydoc.info/github/sarahemm/ruby-syncsign/master)
+YARD docs included, also available on [RubyDoc.info](https://www.rubydoc.info/github/sarahemm/ruby-slowfat/master)
