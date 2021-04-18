@@ -2,7 +2,7 @@
 
 ## Description
 
-Ruby class/gem to access FAT filesystems (currently only FAT16) over slow links or media, such as serial connections. Prioritizes minimum I/O whenever possible, and flexible backing (files, sockets, etc.).
+Ruby class/gem to access FAT filesystems (currently only FAT16) over slow links or media, such as serial connections. Prioritizes minimum I/O whenever possible, and flexible backing (anything subclassed from IO that can seek and read).
 
 ## Features
  * FAT16 support
